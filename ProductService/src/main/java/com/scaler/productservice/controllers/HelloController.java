@@ -1,4 +1,4 @@
-package com.scaler.productservice;
+package com.scaler.productservice.controllers;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +16,8 @@ public class HelloController {
         return "Hey " + name + ", you are from " + city;
     }
 
-    @GetMapping("/add")
-    public String addNumbers(){
-        return String.valueOf(2 + 3);
+    @GetMapping("/add/{a}/{b}")
+    public String addNumbers(@PathVariable("a") Integer x, @PathVariable("b") Integer y){
+        return String.valueOf(x + y);
     }
 }
