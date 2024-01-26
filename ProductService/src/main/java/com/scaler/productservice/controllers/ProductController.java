@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping()
+@RequestMapping("/products")
 public class ProductController {
 
     IProductService productService;
@@ -21,37 +21,37 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/products")
+    @GetMapping()
     public List<Product> getAllProducts(){
         return new ArrayList<>();
     }
 
-    @GetMapping("/products/{id}")
+    @GetMapping("/{id}")
     public Product getSingleProduct(@PathVariable("id") Long id){
         return productService.getSingleProduct(id);
     }
 
-    @GetMapping("/products/category")
+    @GetMapping("/category")
     public List<Category> getAllCategories(){
         return new ArrayList<>();
     }
 
-    @GetMapping("/products/category/{catName}")
+    @GetMapping("/category/{catName}")
     public List<Product> getAllProducts(@PathVariable("catName") String categoryName){
         return new ArrayList<>();
     }
 
-    @PostMapping("/products")
+    @PostMapping()
     public Product addProduct(@RequestBody RequestDTO requestDTO){
         return new Product();
     }
 
-    @PatchMapping("/products/{id}")
+    @PatchMapping("/{id}")
     public Product updateProduct(@PathVariable("id") Long id, @RequestBody RequestDTO requestDTO){
         return new Product();
     }
 
-    @PutMapping("/products/{id}")
+    @PutMapping("/{id}")
     public Product replaceProduct(@PathVariable("id") Long id, @RequestBody RequestDTO requestDTO){
         if(requestDTO.getTitle() == null || requestDTO.getDescription() == null || requestDTO.getCategory() == null){
             return null;
@@ -60,7 +60,7 @@ public class ProductController {
         return new Product();
     }
 
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("/{id}")
     public boolean deleteProduct(@PathVariable("id") Long id){
         return true;
     }
