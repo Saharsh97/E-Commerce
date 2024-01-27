@@ -37,8 +37,14 @@ public class FakeStoreProductService implements IProductService{
         return product;
     }
 
+    public int getAmount(){
+        return 1/0;
+    }
+
     @Override
     public Product getSingleProduct(Long id) {
+//        int a = 1/0;
+        getAmount();
         // hit the FakeStore API, and get the response.
         ResponseDTO responseDTO = restTemplate.getForObject(
                 "https://fakestoreapi.com/products/" + id,
@@ -68,7 +74,7 @@ public class FakeStoreProductService implements IProductService{
     public Product replaceProduct(Long id, RequestDTO requestDTO){
 
         RequestCallback requestCallback =
-                restTemplate.acceptHeaderRequestCallback(ResponseDTO.class);
+                restTemplate.httpEntityCallback(requestDTO, ResponseDTO.class);
 
         HttpMessageConverterExtractor<ResponseDTO> responseExtractor =
                 new HttpMessageConverterExtractor(
@@ -84,7 +90,6 @@ public class FakeStoreProductService implements IProductService{
                 requestCallback,
                 responseExtractor
         );
-
 
         return getProductFromResponseDTO(responseDTO);
     }

@@ -1,10 +1,15 @@
 package com.scaler.productservice.controllers;
 
+import com.scaler.productservice.dto.ErrorResponseDTO;
 import com.scaler.productservice.dto.RequestDTO;
 import com.scaler.productservice.models.Category;
 import com.scaler.productservice.models.Product;
 import com.scaler.productservice.services.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -22,18 +27,32 @@ public class ProductController {
     }
 
     @GetMapping()
-    public List<Product> getAllProducts(){
-        return productService.getAllProducts();
+    public ResponseEntity<List<Product>> getAllProducts(){
+        ResponseEntity responseEntity = new ResponseEntity(
+                productService.getAllProducts(),
+                HttpStatus.OK
+        );
+        return responseEntity;
     }
 
     @GetMapping("/{id}")
-    public Product getSingleProduct(@PathVariable("id") Long id){
-        return productService.getSingleProduct(id);
+    public ResponseEntity<Product> getSingleProduct(@PathVariable("id") Long id){
+        ResponseEntity responseEntity;
+        Product product = productService.getSingleProduct(id);
+        responseEntity = new ResponseEntity(
+                product,
+                HttpStatus.OK
+        );
+        return responseEntity;
     }
 
     @GetMapping("/category")
-    public List<Category> getAllCategories(){
-        return new ArrayList<>();
+    public ResponseEntity<List<Category>> getAllCategories(){
+        ResponseEntity responseEntity = new ResponseEntity(
+                new ArrayList<>(),
+                HttpStatus.ACCEPTED
+        );
+        return responseEntity;
     }
 
     @GetMapping("/category/{catName}")
