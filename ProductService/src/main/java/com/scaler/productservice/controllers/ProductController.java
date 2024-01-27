@@ -23,7 +23,7 @@ public class ProductController {
 
     @GetMapping()
     public List<Product> getAllProducts(){
-        return new ArrayList<>();
+        return productService.getAllProducts();
     }
 
     @GetMapping("/{id}")
@@ -57,7 +57,7 @@ public class ProductController {
             return null;
         }
 
-        return new Product();
+        return productService.replaceProduct(id, requestDTO);
     }
 
     @DeleteMapping("/{id}")
