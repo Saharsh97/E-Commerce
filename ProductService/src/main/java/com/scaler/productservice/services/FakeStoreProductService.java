@@ -1,11 +1,17 @@
 package com.scaler.productservice.services;
 
 import com.scaler.productservice.dto.FakeStoreProductDTO;
+import com.scaler.productservice.dto.ErrorResponseDTO;
 import com.scaler.productservice.dto.RequestDTO;
+import com.scaler.productservice.dto.ResponseDTO;
+import com.scaler.productservice.exceptions.ProductNotFoundException;
 import com.scaler.productservice.models.Category;
 import com.scaler.productservice.models.Product;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpMessageConverterExtractor;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestTemplate;
@@ -38,11 +44,16 @@ public class FakeStoreProductService implements IProductService{
     @Override
     public Product getSingleProduct(Long id) {
         int a = 1/0;    // all RunTime exceptions cannot be caught.
+    public Product getSingleProduct(Long id) throws ProductNotFoundException {
         // hit the FakeStore API, and get the response.
         FakeStoreProductDTO fakeStoreProductDTO = restTemplate.getForObject(
                 "https://fakestoreapi.com/products/" + id,
                 FakeStoreProductDTO.class
         );
+
+        if(responseDTO == null){
+            throw new ProductNotFoundException("product with id " + id + " does not exist");
+        }
 
         // parse the response, and convert it to Product!
         Product product = getProductFromResponseDTO(fakeStoreProductDTO);
