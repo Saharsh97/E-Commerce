@@ -2,6 +2,7 @@ package com.scaler.productservice.controllers;
 
 import com.scaler.productservice.dto.ErrorResponseDTO;
 import com.scaler.productservice.dto.RequestDTO;
+import com.scaler.productservice.exceptions.ProductNotFoundException;
 import com.scaler.productservice.models.Category;
 import com.scaler.productservice.models.Product;
 import com.scaler.productservice.services.IProductService;
@@ -36,7 +37,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getSingleProduct(@PathVariable("id") Long id){
+    public ResponseEntity<Product> getSingleProduct(@PathVariable("id") Long id) throws ProductNotFoundException {
         ResponseEntity responseEntity;
         Product product = productService.getSingleProduct(id);
         responseEntity = new ResponseEntity(
@@ -82,5 +83,18 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public boolean deleteProduct(@PathVariable("id") Long id){
         return true;
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleProductNotFoundException(
+            ProductNotFoundException productNotFoundException
+    ){
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO();
+        errorResponseDTO.setMessage(productNotFoundException.getMessage() + " (response generated at Controller Level)");
+        ResponseEntity<ErrorResponseDTO> responseEntity = new ResponseEntity(
+                errorResponseDTO,
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
+        return responseEntity;
     }
 }

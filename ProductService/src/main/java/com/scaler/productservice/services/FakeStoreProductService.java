@@ -1,12 +1,17 @@
 package com.scaler.productservice.services;
 
+import com.scaler.productservice.dto.ErrorResponseDTO;
 import com.scaler.productservice.dto.RequestDTO;
 import com.scaler.productservice.dto.ResponseDTO;
+import com.scaler.productservice.exceptions.ProductNotFoundException;
 import com.scaler.productservice.models.Category;
 import com.scaler.productservice.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpMessageConverterExtractor;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestTemplate;
@@ -14,7 +19,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
 public class FakeStoreProductService implements IProductService{
 
     RestTemplate restTemplate;
@@ -37,19 +41,18 @@ public class FakeStoreProductService implements IProductService{
         return product;
     }
 
-    public int getAmount(){
-        return 1/0;
-    }
-
     @Override
-    public Product getSingleProduct(Long id) {
-//        int a = 1/0;
-        getAmount();
+    public Product getSingleProduct(Long id) throws ProductNotFoundException{
         // hit the FakeStore API, and get the response.
         ResponseDTO responseDTO = restTemplate.getForObject(
                 "https://fakestoreapi.com/products/" + id,
                 ResponseDTO.class
         );
+
+        if(responseDTO == null){
+            // service will definitely throw exceptions, and not absorb it.
+            throw new ProductNotFoundException("product with id " + id + " does not exists");
+        }
 
         // parse the response, and convert it to Product!
         Product product = getProductFromResponseDTO(responseDTO);

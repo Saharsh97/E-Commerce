@@ -1,6 +1,9 @@
 package com.scaler.productservice.controllers;
 
+import com.scaler.productservice.exceptions.ProductNotFoundException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.TimeoutException;
 
 @RestController
 @RequestMapping("/hello")
@@ -17,7 +20,8 @@ public class HelloController {
     }
 
     @GetMapping("/add/{a}/{b}")
-    public String addNumbers(@PathVariable("a") Integer x, @PathVariable("b") Integer y){
-        return String.valueOf(x + y);
+    public String addNumbers(@PathVariable("a") Integer x, @PathVariable("b") Integer y) throws TimeoutException {
+        throw new TimeoutException("sample exception in hello controller");
+//        return String.valueOf(x + y);
     }
 }
