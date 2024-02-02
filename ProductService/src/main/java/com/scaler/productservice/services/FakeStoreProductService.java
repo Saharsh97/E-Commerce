@@ -7,6 +7,9 @@ import com.scaler.productservice.dto.ResponseDTO;
 import com.scaler.productservice.exceptions.ProductNotFoundException;
 import com.scaler.productservice.models.Category;
 import com.scaler.productservice.models.Product;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Primary
+@Qualifier("fakeStoreProductService")
 public class FakeStoreProductService implements IProductService{
 
     RestTemplate restTemplate;
@@ -31,10 +36,10 @@ public class FakeStoreProductService implements IProductService{
 
     public Product getProductFromResponseDTO(FakeStoreProductDTO fakeStoreProductDTO){
         Product product = new Product();
-        product.setId(fakeStoreProductDTO.getId());
-        product.setName(fakeStoreProductDTO.getTitle());
-        product.setDescription(fakeStoreProductDTO.getDescription());
-        product.setPrice(fakeStoreProductDTO.getPrice());
+        product.setId(responseDTO.getId());
+        product.setTitle(responseDTO.getTitle());
+        product.setDescription(responseDTO.getDescription());
+        product.setPrice(responseDTO.getPrice());
         product.setCategory(new Category());
         product.getCategory().setName(fakeStoreProductDTO.getCategory());
         product.setImageUrl(fakeStoreProductDTO.getImage());
@@ -97,50 +102,41 @@ public class FakeStoreProductService implements IProductService{
 
 
     @Override
-    public Product replaceProduct(Long id, RequestDTO requestDTO){
-        // in FakeStore, you get back the updated product.
-        // but in restTemplate, the return type of put() is? void.
-        // what do we need from the put method? we need a response.
-        // will the put() method as it is, of restTemplate work for us? no.
-
-        // how to get the updated product?
-        // 1. make a get call. problems?
-        // you make 2 calls. not efficient.
-        // 2. if somehow, put itself gave me the object.
-
-        // when we call restTemplate.put("fakestore/products/{id}")
-        // fake store return the json object.
-        // but restTemplate just ignored the json body! => void.
-
-        // check implementation of getForObject. it uses execute.
-        // check implementation of postForObject. it uses execute.
-        // what is more generic? post method or execute? execute!
-        // you can just use execute instead. and pass everything that need to be done.
-        // execute method is public. it can be used for any kind of request.
-        // so why dont we only execute, for all get(), post() etc? Convenience and clarity!
-        // execute takes a lot of parameters, and most are not required.
-        // you use get() with few parameters.
-        // get() inside will call the remaining parameters for execute.
-        // 2) notes.
-//        new org.springframework.http.HttpMethod("Saharsh");
-
-
-        RequestCallback requestCallback =
-                restTemplate.httpEntityCallback(
-                        RequestDTO.class,
-                        FakeStoreProductDTO.class);
-
-        HttpMessageConverterExtractor<FakeStoreProductDTO> responseExtractor =
-                new HttpMessageConverterExtractor<>(
-                        FakeStoreProductDTO.class,
-                        restTemplate.getMessageConverters());
-
-        FakeStoreProductDTO apiResponse = restTemplate.execute(
-                "https://fakestoreapi.com/products/" + id,
-                HttpMethod.PUT,
-                requestCallback,
-                responseExtractor);
-
-        return getProductFromResponseDTO(apiResponse);
+    public Product addProduct(Product product) {
+        return null;
     }
+
+    @Override
+    public Product replaceProduct(Long id, Product product) {
+        return null;
+    }
+
+    @Override
+    public Product updateProduct(Long id, Product product) {
+        return null;
+    }
+
+//    @Override
+//    public Product replaceProduct(Long id, Product product){
+//
+//        RequestCallback requestCallback =
+//                restTemplate.httpEntityCallback(requestDTO, ResponseDTO.class);
+//
+//        HttpMessageConverterExtractor<ResponseDTO> responseExtractor =
+//                new HttpMessageConverterExtractor(
+//                        ResponseDTO.class,
+//                        restTemplate.getMessageConverters()
+//                );
+//
+//        // in 1 single call, I am able to PUT an object,
+//        // as well as, get the same object in response.
+//        ResponseDTO responseDTO = restTemplate.execute(
+//                "https://fakestoreapi.com/products/" + id,
+//                HttpMethod.PUT,
+//                requestCallback,
+//                responseExtractor
+//        );
+//
+//        return getProductFromResponseDTO(responseDTO);
+//    }
 }

@@ -9,5 +9,7 @@ import java.util.List;
 public interface IProductService {
     public Product getSingleProduct(Long id) throws ProductNotFoundException;
     public List<Product> getAllProducts();
-    public Product replaceProduct(Long id, RequestDTO requestDTO);
+    public Product addProduct(Product product);
+    public Product replaceProduct(Long id, Product product);
+    public Product updateProduct(Long id, Product product) throws ProductNotFoundException;
 }

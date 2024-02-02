@@ -6,6 +6,7 @@ import com.scaler.productservice.models.Category;
 import com.scaler.productservice.models.Product;
 import com.scaler.productservice.services.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class ProductController {
     IProductService productService;
 
     @Autowired
-    public ProductController(IProductService productService){
+    public ProductController(@Qualifier("selfProductService") IProductService productService){
         this.productService = productService;
     }
 
@@ -44,7 +45,9 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<Product> getSingleProduct(@PathVariable("id") Long id) throws ProductNotFoundException {
         ResponseEntity responseEntity;
+
         Product product = productService.getSingleProduct(id);
+
         responseEntity = new ResponseEntity(
                 product,
                 HttpStatus.OK
@@ -64,12 +67,22 @@ public class ProductController {
 
     @PostMapping()
     public Product addProduct(@RequestBody RequestDTO requestDTO){
-        return new Product();
+        Product product = new Product();
+        product.setTitle(requestDTO.getTitle());
+        product.setDescription(requestDTO.getDescription());
+        product.setImageUrl(requestDTO.getImage());
+        product.setPrice(requestDTO.getPrice());
+        product.setCategory(new Category());
+        product.getCategory().setName(requestDTO.getCategory());
+
+        return productService.addProduct(product);
     }
 
     @PatchMapping("/{id}")
-    public Product updateProduct(@PathVariable("id") Long id, @RequestBody RequestDTO requestDTO){
-        return new Product();
+    public Product updateProduct(@PathVariable("id") Long id, @RequestBody RequestDTO requestDTO) throws ProductNotFoundException {
+        // request only contains fields that have to be updated for this id.
+        Product product = getProductFromRequestDTO(requestDTO);
+        return productService.updateProduct(id, product);
     }
 
     @PutMapping("/{id}")
@@ -77,13 +90,23 @@ public class ProductController {
         if(requestDTO.getTitle() == null || requestDTO.getDescription() == null || requestDTO.getCategory() == null){
             return null;
         }
-
-        return productService.replaceProduct(id, requestDTO);
+        return productService.replaceProduct(id, getProductFromRequestDTO(requestDTO));
     }
 
     @DeleteMapping("/{id}")
     public boolean deleteProduct(@PathVariable("id") Long id){
         return true;
+    }
+
+    private Product getProductFromRequestDTO(RequestDTO requestDTO){
+        Product product = new Product();
+        product.setTitle(requestDTO.getTitle());
+        product.setDescription(requestDTO.getDescription());
+        product.setImageUrl(requestDTO.getImage());
+        product.setPrice(requestDTO.getPrice());
+        product.setCategory(new Category());
+        product.getCategory().setName(requestDTO.getCategory());
+        return product;
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
