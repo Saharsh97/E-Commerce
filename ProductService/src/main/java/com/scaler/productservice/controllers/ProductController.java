@@ -7,6 +7,7 @@ import com.scaler.productservice.models.Category;
 import com.scaler.productservice.models.Product;
 import com.scaler.productservice.services.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class ProductController {
     IProductService productService;
 
     @Autowired
-    public ProductController(IProductService productService){
+    public ProductController(@Qualifier("selfProductService") IProductService productService){
         this.productService = productService;
     }
 

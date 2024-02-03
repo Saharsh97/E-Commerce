@@ -7,6 +7,8 @@ import com.scaler.productservice.exceptions.ProductNotFoundException;
 import com.scaler.productservice.models.Category;
 import com.scaler.productservice.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,9 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
+@Primary
+@Qualifier("fakeProductService")
 public class FakeStoreProductService implements IProductService{
 
     RestTemplate restTemplate;
@@ -32,7 +37,7 @@ public class FakeStoreProductService implements IProductService{
     public Product getProductFromResponseDTO(ResponseDTO responseDTO){
         Product product = new Product();
         product.setId(responseDTO.getId());
-        product.setName(responseDTO.getTitle());
+        product.setTitle(responseDTO.getTitle());
         product.setDescription(responseDTO.getDescription());
         product.setPrice(responseDTO.getPrice());
         product.setCategory(new Category());
