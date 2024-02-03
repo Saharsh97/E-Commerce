@@ -79,6 +79,16 @@ public class FakeStoreProductService implements IProductService{
     }
 
     @Override
+    public Product addProduct(Product product) {
+        return null;
+    }
+
+    @Override
+    public Product updateProduct(Long id, Product product) {
+        return null;
+    }
+
+    @Override
     public Product replaceProduct(Long id, RequestDTO requestDTO){
 
         RequestCallback requestCallback =

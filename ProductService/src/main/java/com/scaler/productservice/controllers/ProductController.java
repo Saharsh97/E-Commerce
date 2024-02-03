@@ -64,12 +64,31 @@ public class ProductController {
 
     @PostMapping()
     public Product addProduct(@RequestBody RequestDTO requestDTO){
-        return new Product();
+        Product product = new Product();
+        product.setTitle(requestDTO.getTitle());
+        product.setDescription(requestDTO.getDescription());
+        product.setPrice(requestDTO.getPrice());
+        product.setImageUrl(requestDTO.getImage());
+
+        product.setCategory(new Category());
+        product.getCategory().setName(requestDTO.getCategory());
+
+        Product savedProduct = productService.addProduct(product);
+        return savedProduct;
     }
 
     @PatchMapping("/{id}")
-    public Product updateProduct(@PathVariable("id") Long id, @RequestBody RequestDTO requestDTO){
-        return new Product();
+    public Product updateProduct(@PathVariable("id") Long id, @RequestBody RequestDTO requestDTO) throws ProductNotFoundException {
+        Product product = new Product();
+        product.setTitle(requestDTO.getTitle());
+        product.setDescription(requestDTO.getDescription());
+        product.setPrice(requestDTO.getPrice());
+        product.setImageUrl(requestDTO.getImage());
+
+        product.setCategory(new Category());
+        product.getCategory().setName(requestDTO.getCategory());
+
+        return productService.updateProduct(id, product);
     }
 
     @PutMapping("/{id}")
