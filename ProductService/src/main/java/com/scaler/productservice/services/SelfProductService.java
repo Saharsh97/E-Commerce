@@ -44,19 +44,14 @@ public class SelfProductService implements IProductService{
 
     @Override
     public Product addProduct(Product product) {
-        // you get a product, with an existing category
-        // or, you get a product, with a new category.
-        Optional<Category> categoryOptional = categoryRepository.findByName(product.getCategory().getName());
-        Category savedCategory;
+        Optional<Category> categoryOptional =
+                categoryRepository.findByName(product.getCategory().getName());
+
         if(categoryOptional.isEmpty()){
-            Category category = new Category();
-            category.setName(product.getCategory().getName());
-            savedCategory = categoryRepository.save(category);
+            // Cascade will automatically create new categories!
         } else {
-            savedCategory = categoryOptional.get();
+            product.setCategory(categoryOptional.get());
         }
-        // savedCategory has id = 5, and name = Dress.
-        product.setCategory(savedCategory);
         Product savedProduct = productRepository.save(product);
         return savedProduct;
     }
