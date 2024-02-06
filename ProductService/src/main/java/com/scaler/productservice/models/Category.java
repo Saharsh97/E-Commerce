@@ -1,8 +1,6 @@
 package com.scaler.productservice.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,12 +11,19 @@ import java.util.List;
 @Setter
 @Entity
 public class Category extends BaseModel{
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE})
     // by default, Spring thinks that this is a separate relation.
     // it is different from what you defined in the Product Model.
+
+    // if you delete a product, delete all the categories as well.
     private List<Product> products;
     private String name;
 }
+
+// you want to add Macbook to products table.
+// products table depends on the category entry to be made.
+// for this, the category should have macbook in its List<Products>.
+// category depends upon the product entry to be made.
 
 // M : M
 // if Products is a part of multiple categories

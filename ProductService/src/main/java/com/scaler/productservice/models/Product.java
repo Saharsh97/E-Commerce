@@ -1,5 +1,6 @@
 package com.scaler.productservice.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
@@ -20,7 +21,9 @@ public class Product extends BaseModel{
 
     // every product has only one category.
     // M : 1
-    @ManyToOne
+//    @ManyToOne(cascade = {CascadeType.ALL})
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     // Id of Category, on the Product table.
     private Category category;
 }
