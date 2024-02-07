@@ -1,6 +1,5 @@
 package com.scaler.productservice.repositories;
 
-import com.scaler.productservice.models.Category;
 import com.scaler.productservice.models.Product;
 import com.scaler.productservice.projections.ProductWithIdTitlePrice;
 import org.springframework.data.jpa.repository.JpaRepository;

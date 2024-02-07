@@ -19,11 +19,6 @@ public class Product extends BaseModel{
     private double price;
     private String imageUrl;
 
-    // every product has only one category.
-    // M : 1
-//    @ManyToOne(cascade = {CascadeType.ALL})
-
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-    // Id of Category, on the Product table.
     private Category category;
 }
