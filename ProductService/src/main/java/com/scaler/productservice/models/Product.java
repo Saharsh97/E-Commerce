@@ -17,13 +17,10 @@ public class Product extends BaseModel{
     private String title;
     private String description;
     private double price;
-    private String imageUrl;
-
-    // every product has only one category.
-    // M : 1
-//    @ManyToOne(cascade = {CascadeType.ALL})
+    private String picture;
+    private int quantitySold;
+    private int quantityAvailable;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-    // Id of Category, on the Product table.
     private Category category;
 }

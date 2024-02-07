@@ -68,7 +68,7 @@ public class ProductController {
         product.setTitle(requestDTO.getTitle());
         product.setDescription(requestDTO.getDescription());
         product.setPrice(requestDTO.getPrice());
-        product.setImageUrl(requestDTO.getImage());
+        product.setPicture(requestDTO.getImage());
 
         product.setCategory(new Category());
         product.getCategory().setName(requestDTO.getCategory());
@@ -83,7 +83,7 @@ public class ProductController {
         product.setTitle(requestDTO.getTitle());
         product.setDescription(requestDTO.getDescription());
         product.setPrice(requestDTO.getPrice());
-        product.setImageUrl(requestDTO.getImage());
+        product.setPicture(requestDTO.getImage());
 
         product.setCategory(new Category());
         product.getCategory().setName(requestDTO.getCategory());
