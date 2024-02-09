@@ -42,7 +42,7 @@ public class FakeStoreProductService implements IProductService{
         product.setPrice(responseDTO.getPrice());
         product.setCategory(new Category());
         product.getCategory().setName(responseDTO.getCategory());
-        product.setImageUrl(responseDTO.getImage());
+//        product.getPicture(responseDTO.getImage());
         return product;
     }
 

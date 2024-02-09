@@ -84,10 +84,10 @@ public class SelfProductService implements IProductService{
                         existingProduct.getPrice()
         );
 
-        productToBeSaved.setImageUrl(
-                product.getImageUrl() != null ?
-                        product.getImageUrl() :
-                        existingProduct.getImageUrl()
+        productToBeSaved.setPicture(
+                product.getPicture() != null ?
+                        product.getPicture() :
+                        existingProduct.getPicture()
         );
 
         if(product.getCategory().getName() != null){

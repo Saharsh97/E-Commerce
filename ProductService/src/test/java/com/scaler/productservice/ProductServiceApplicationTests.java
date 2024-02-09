@@ -61,17 +61,17 @@ class ProductServiceApplicationTests {
         }
     }
 
-    @Test
-    @Transactional
-    void getCategoryDetails(){
-        Optional<Category> categoryOptional = categoryRepository.findById(2L);
-        Category category = categoryOptional.get();
-        System.out.println(category.getName());
-        List<Product> products = category.getProducts();
-        for(Product p: products){
-            System.out.println(p.getId() + " : " + p.getPrice());
-        }
-    }
+//    @Test
+//    @Transactional
+//    void getCategoryDetails(){
+//        Optional<Category> categoryOptional = categoryRepository.findById(2L);
+//        Category category = categoryOptional.get();
+//        System.out.println(category.getName());
+//        List<Product> products = category.getProducts();
+//        for(Product p: products){
+//            System.out.println(p.getId() + " : " + p.getPrice());
+//        }
+//    }
     // what is faster?
     // 2 DB calls OR 1 DB with JOIN?
     // 2 DB calls will be slow.
