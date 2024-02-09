@@ -39,9 +39,9 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getSingleProduct(@PathVariable("id") Long id) throws ProductNotFoundException {
-        ResponseEntity responseEntity;
+        ResponseEntity<Product> responseEntity;
         Product product = productService.getSingleProduct(id);
-        responseEntity = new ResponseEntity(
+        responseEntity = new ResponseEntity<>(
                 product,
                 HttpStatus.OK
         );
@@ -64,14 +64,7 @@ public class ProductController {
 
     @PostMapping()
     public Product addProduct(@RequestBody RequestDTO requestDTO){
-        Product product = new Product();
-        product.setTitle(requestDTO.getTitle());
-        product.setDescription(requestDTO.getDescription());
-        product.setPrice(requestDTO.getPrice());
-        product.setPicture(requestDTO.getImage());
-
-        product.setCategory(new Category());
-        product.getCategory().setName(requestDTO.getCategory());
+        Product product = convertRequestDTOToProduct(requestDTO);
 
         Product savedProduct = productService.addProduct(product);
         return savedProduct;
@@ -79,14 +72,7 @@ public class ProductController {
 
     @PatchMapping("/{id}")
     public Product updateProduct(@PathVariable("id") Long id, @RequestBody RequestDTO requestDTO) throws ProductNotFoundException {
-        Product product = new Product();
-        product.setTitle(requestDTO.getTitle());
-        product.setDescription(requestDTO.getDescription());
-        product.setPrice(requestDTO.getPrice());
-        product.setPicture(requestDTO.getImage());
-
-        product.setCategory(new Category());
-        product.getCategory().setName(requestDTO.getCategory());
+        Product product = convertRequestDTOToProduct(requestDTO);
 
         return productService.updateProduct(id, product);
     }
@@ -96,8 +82,9 @@ public class ProductController {
         if(requestDTO.getTitle() == null || requestDTO.getDescription() == null || requestDTO.getCategory() == null){
             return null;
         }
+        Product product = convertRequestDTOToProduct(requestDTO);
 
-        return productService.replaceProduct(id, requestDTO);
+        return productService.replaceProduct(id, product);
     }
 
     @DeleteMapping("/{id}")
@@ -116,5 +103,17 @@ public class ProductController {
                 HttpStatus.INTERNAL_SERVER_ERROR
         );
         return responseEntity;
+    }
+
+    private Product convertRequestDTOToProduct(RequestDTO requestDTO){
+        Product product = new Product();
+        product.setTitle(requestDTO.getTitle());
+        product.setDescription(requestDTO.getDescription());
+        product.setPrice(requestDTO.getPrice());
+        product.setPicture(requestDTO.getImage());
+
+        product.setCategory(new Category());
+        product.getCategory().setName(requestDTO.getCategory());
+        return product;
     }
 }

@@ -1,6 +1,7 @@
 package com.scaler.productservice.services;
 
 import com.scaler.productservice.dto.ErrorResponseDTO;
+import com.scaler.productservice.dto.FakeStoreRequestDTO;
 import com.scaler.productservice.dto.RequestDTO;
 import com.scaler.productservice.dto.ResponseDTO;
 import com.scaler.productservice.exceptions.ProductNotFoundException;
@@ -89,7 +90,14 @@ public class FakeStoreProductService implements IProductService{
     }
 
     @Override
-    public Product replaceProduct(Long id, RequestDTO requestDTO){
+    public Product replaceProduct(Long id, Product product){
+
+        FakeStoreRequestDTO requestDTO = new FakeStoreRequestDTO();
+        requestDTO.setTitle(product.getTitle());
+        requestDTO.setDescription(product.getDescription());
+        requestDTO.setPrice(product.getPrice());
+        requestDTO.setCategory(product.getCategory().getName());
+        requestDTO.setImage(product.getPicture());
 
         RequestCallback requestCallback =
                 restTemplate.httpEntityCallback(requestDTO, ResponseDTO.class);

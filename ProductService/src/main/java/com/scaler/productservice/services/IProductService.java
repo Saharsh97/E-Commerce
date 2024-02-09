@@ -11,5 +11,5 @@ public interface IProductService {
     public List<Product> getAllProducts();
     public Product addProduct(Product product);
     public Product updateProduct(Long id, Product product) throws ProductNotFoundException;
-    public Product replaceProduct(Long id, RequestDTO requestDTO);
+    public Product replaceProduct(Long id, Product product);
 }

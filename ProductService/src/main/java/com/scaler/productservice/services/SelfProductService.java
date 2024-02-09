@@ -91,6 +91,9 @@ public class SelfProductService implements IProductService{
         );
 
         if(product.getCategory().getName() != null){
+            // the product you want to add, does not have an existing category.
+            // add the new category to the category table first. get its id.
+            // then add the new product, with its category_id pointing to the new category id.
             Optional<Category> categoryOptional = categoryRepository.findByName(product.getCategory().getName());
             Category savedCategory;
             if(categoryOptional.isEmpty()){
@@ -111,7 +114,7 @@ public class SelfProductService implements IProductService{
     }
 
     @Override
-    public Product replaceProduct(Long id, RequestDTO requestDTO) {
+    public Product replaceProduct(Long id, Product product) {
         return null;
     }
 }
