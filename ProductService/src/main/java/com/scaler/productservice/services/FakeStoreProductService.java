@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Primary
 @Qualifier("fakeProductService")
 public class FakeStoreProductService implements IProductService{
 

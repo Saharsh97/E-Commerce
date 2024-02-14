@@ -29,14 +29,45 @@ public class ProductController {
     }
 
     @GetMapping()
+    // ideal logic is, controller returns the same number of products, that the service does.
+    // what if, anyone changes the behaviour?
+    // code below
     public ResponseEntity<List<Product>> getAllProducts(){
+        // will this call the real product service? no.
+        // it calls the mock. gets 3 products in response.
+        List<Product> products = productService.getAllProducts();
+
+        List<Product> finalProducts = new ArrayList<>();
+        // t1
+//        finalProducts.add(products.get(0));
+
+        // t2
+        for(Product product: products){
+            product.setTitle("Hello" + product.getTitle());
+            finalProducts.add(product);
+        }
+        // will this t2 pass?? YES.
+        // how many think this will pass?
+        // take a b c example, pass by reference.
+        // This is a BUG in your TESTCASE
+        // USE DEBUGGER
+        // create a copy of products to pass, as it can be mutated in the controller execution.
+        // you have mutated the list present in the testcase.
+        // so its being called wrongly in the test case!
+        // be careful of pass by value, pass by reference etc..
+        // use Mocking carefully!
         ResponseEntity responseEntity = new ResponseEntity(
-                productService.getAllProducts(),
+                finalProducts,
                 HttpStatus.OK
         );
+        // will the test case pass?
+        // run test case t1
         return responseEntity;
     }
 
+    // t3
+    // we want to test, what if product does not exist, I should get exception.
+    // add test in ProductControllerTest
     @GetMapping("/{id}")
     public ResponseEntity<Product> getSingleProduct(@PathVariable("id") Long id) throws ProductNotFoundException {
         ResponseEntity<Product> responseEntity;

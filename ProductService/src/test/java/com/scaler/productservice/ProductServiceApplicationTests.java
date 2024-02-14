@@ -15,6 +15,17 @@ import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
+// Junit is the de-facto library for Java test cases.
+// Recommended for Java.
+// it is so common, that it comes built-in with Spring.
+// you dont need to import Junit separately
+
+// Keep the directory analogous to src/main folder.
+// have corresponding test class.
+// create services package. add SelfProductServiceTest
+
+// This is such a common usage, that you can autogenerate test cases.
+// autogenerate for ProductController test
 class ProductServiceApplicationTests {
 
     ProductRepository productRepository;
@@ -26,70 +37,10 @@ class ProductServiceApplicationTests {
         this.categoryRepository = categoryRepository;
     }
     @Test
+    // If the Spring startup context didnt load properly, then this test case will fail.
+    // hence spring will not at all start
     void contextLoads() {
     }
+    // create SpringBootControllerTest
 
-    @Test
-    void getData(){
-        List<Product> products = productRepository.something(52L);
-        for(Product p: products){
-            System.out.println(p.getId() + " " + p.getTitle());
-        }
-    }
-
-    @Test
-    void getSpecificData(){
-        List<ProductWithIdTitlePrice> products = productRepository.somethingSpecific(52L);
-        for(ProductWithIdTitlePrice p: products){
-            System.out.println(p.getId() + " " + p.getTitle());
-        }
-    }
-
-    @Test
-    void getDataUsingSQLQuery(){
-        List<Product> products = productRepository.somethingSQL(52L);
-        for(Product p: products){
-            System.out.println(p.getId() + " " + p.getTitle());
-        }
-    }
-
-    @Test
-    void getDataUsingSQLQueryFields(){
-        List<ProductWithIdTitlePrice> products = productRepository.somethingSQLWithFields(52L);
-        for(ProductWithIdTitlePrice p: products){
-            System.out.println(p.getId() + " " + p.getTitle());
-        }
-    }
-
-//    @Test
-//    @Transactional
-//    void getCategoryDetails(){
-//        Optional<Category> categoryOptional = categoryRepository.findById(2L);
-//        Category category = categoryOptional.get();
-//        System.out.println(category.getName());
-//        List<Product> products = category.getProducts();
-//        for(Product p: products){
-//            System.out.println(p.getId() + " : " + p.getPrice());
-//        }
-//    }
-    // what is faster?
-    // 2 DB calls OR 1 DB with JOIN?
-    // 2 DB calls will be slow.
-    // 2 DB calls in 5% of the cases, is better a JOIN in 100% of cases.
-
-    // lazy fetch
-    // in 95% scenarios, you only want to get category.name() -> 1 DB call without join.
-    // in only 5% scenarios, you want to get the category.name() + category.products() -> 2 DB calls.
-
-    // eager fetch.
-    // in 95% scenarios, you only want to get category.name() -> 1 DB call with join.
-    // you are wasting time taking join on the products, when it is not even needed!
-
-    // FetchMode. This is not relevant. because your ORM ignores FetchMode.
-    @Test
-    @Transactional
-    @Commit
-    void deleteEntries(){
-        productRepository.deleteById(300L);
-    }
 }
