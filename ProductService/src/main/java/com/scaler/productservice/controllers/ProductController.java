@@ -30,8 +30,18 @@ public class ProductController {
 
     @GetMapping()
     public ResponseEntity<List<Product>> getAllProducts(){
+    // hardcoded: 16, 17, 18. my copy: 75, 76, 77
+        List<Product> productsFromService = productService.getAllProducts();
+        // a: 73, b: 64, c: 75
+        List<Product> finalProductsList = new ArrayList<>();
+//        finalProductsList.add(productsFromService.get(0));
+        for(Product product: productsFromService){
+            product.setTitle("Hello " + product.getTitle());
+            finalProductsList.add(product);
+        }
+
         ResponseEntity responseEntity = new ResponseEntity(
-                productService.getAllProducts(),
+                finalProductsList,
                 HttpStatus.OK
         );
         return responseEntity;
