@@ -1,10 +1,13 @@
 package com.scaler.productservice.controllers;
 
+import com.scaler.productservice.commons.AuthenticationCommons;
 import com.scaler.productservice.dto.ErrorResponseDTO;
 import com.scaler.productservice.dto.RequestDTO;
 import com.scaler.productservice.exceptions.ProductNotFoundException;
 import com.scaler.productservice.models.Category;
 import com.scaler.productservice.models.Product;
+import com.scaler.productservice.models.Role;
+import com.scaler.productservice.models.UserDTO;
 import com.scaler.productservice.services.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,18 +26,47 @@ public class ProductController {
 
     IProductService productService;
 
+    AuthenticationCommons authenticationCommons;
+
+
     @Autowired
-    public ProductController(@Qualifier("selfProductService") IProductService productService){
+    public ProductController(@Qualifier("selfProductService") IProductService productService, AuthenticationCommons authenticationCommons){
         this.productService = productService;
+        this.authenticationCommons = authenticationCommons;
     }
 
+    // lets say, you hit UserService to validate the token
+    // lets say, you get a null response: request is rejected by Product Service
+    // you get a UserDTO object, but it does not have the correct roles.
+    // then again ProductService will reject the request
     @GetMapping()
-    public ResponseEntity<List<Product>> getAllProducts(){
-    // hardcoded: 16, 17, 18. my copy: 75, 76, 77
+    public ResponseEntity<List<Product>> getAllProducts(@RequestHeader("AuthenticationToken") String tokenValue){
+
+        UserDTO userDTO = authenticationCommons.validateTokens(tokenValue);
+
+        if(userDTO == null){
+            return new ResponseEntity<>(
+                    HttpStatus.FORBIDDEN
+            );
+        }
+
+        boolean isAdmin = false;
+        for(Role role: userDTO.getRoles()){
+            if(role.getName().equals("ADMIN")){
+                isAdmin = true;
+                break;
+            }
+        }
+
+        if(!isAdmin){
+            return new ResponseEntity<>(
+                    HttpStatus.UNAUTHORIZED
+            );
+        }
+
         List<Product> productsFromService = productService.getAllProducts();
-        // a: 73, b: 64, c: 75
+
         List<Product> finalProductsList = new ArrayList<>();
-//        finalProductsList.add(productsFromService.get(0));
         for(Product product: productsFromService){
             product.setTitle("Hello " + product.getTitle());
             finalProductsList.add(product);
@@ -67,10 +99,10 @@ public class ProductController {
         return responseEntity;
     }
 
-    @GetMapping("/category/{catName}")
-    public List<Product> getAllProducts(@PathVariable("catName") String categoryName){
-        return new ArrayList<>();
-    }
+//    @GetMapping("/category/{catName}")
+//    public List<Product> getAllProducts(@PathVariable("catName") String categoryName){
+//        return new ArrayList<>();
+//    }
 
     @PostMapping()
     public Product addProduct(@RequestBody RequestDTO requestDTO){
