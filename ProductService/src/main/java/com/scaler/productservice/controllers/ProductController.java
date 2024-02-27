@@ -40,29 +40,7 @@ public class ProductController {
     // you get a UserDTO object, but it does not have the correct roles.
     // then again ProductService will reject the request
     @GetMapping()
-    public ResponseEntity<List<Product>> getAllProducts(@RequestHeader("AuthenticationToken") String tokenValue){
-
-        UserDTO userDTO = authenticationCommons.validateTokens(tokenValue);
-
-        if(userDTO == null){
-            return new ResponseEntity<>(
-                    HttpStatus.FORBIDDEN
-            );
-        }
-
-        boolean isAdmin = false;
-        for(Role role: userDTO.getRoles()){
-            if(role.getName().equals("ADMIN")){
-                isAdmin = true;
-                break;
-            }
-        }
-
-        if(!isAdmin){
-            return new ResponseEntity<>(
-                    HttpStatus.UNAUTHORIZED
-            );
-        }
+    public ResponseEntity<List<Product>> getAllProducts(){
 
         List<Product> productsFromService = productService.getAllProducts();
 
