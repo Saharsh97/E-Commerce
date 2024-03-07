@@ -10,6 +10,7 @@ import com.scaler.productservice.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,15 +25,16 @@ import java.util.List;
 
 @Service
 @Primary
-@Qualifier("fakeProductService")
+@Qualifier("fakeStoreProductService")
 public class FakeStoreProductService implements IProductService{
 
     RestTemplate restTemplate;
-
+    RedisTemplate<String, Product> redisTemplate;
 
     @Autowired
-    public FakeStoreProductService(RestTemplate restTemplate){
+    public FakeStoreProductService(RestTemplate restTemplate, RedisTemplate redisTemplate){
         this.restTemplate = restTemplate;
+        this.redisTemplate = redisTemplate;
     }
 
     public Product getProductFromResponseDTO(ResponseDTO responseDTO){
@@ -49,19 +51,26 @@ public class FakeStoreProductService implements IProductService{
 
     @Override
     public Product getSingleProduct(Long id) throws ProductNotFoundException{
-        // hit the FakeStore API, and get the response.
+
+        // I want to run an operation on hash value
+        Product p = (Product) redisTemplate.opsForHash().get("PRODUCTS", "PRODUCT_" + id);
+        if(p != null){
+            return p;
+        }
+
         ResponseDTO responseDTO = restTemplate.getForObject(
                 "https://fakestoreapi.com/products/" + id,
                 ResponseDTO.class
         );
 
         if(responseDTO == null){
-            // service will definitely throw exceptions, and not absorb it.
             throw new ProductNotFoundException("product with id " + id + " does not exists");
         }
 
-        // parse the response, and convert it to Product!
         Product product = getProductFromResponseDTO(responseDTO);
+
+        redisTemplate.opsForHash().put("PRODUCTS", "PRODUCT_"+id, product);
+
         return product;
     }
 
