@@ -10,7 +10,7 @@ import com.scaler.productservice.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.redis.core.RedisTemplate;
+//import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,12 +29,12 @@ import java.util.List;
 public class FakeStoreProductService implements IProductService{
 
     RestTemplate restTemplate;
-    RedisTemplate<String, Product> redisTemplate;
+//    RedisTemplate<String, Product> redisTemplate;
 
     @Autowired
-    public FakeStoreProductService(RestTemplate restTemplate, RedisTemplate redisTemplate){
+    public FakeStoreProductService(RestTemplate restTemplate){
         this.restTemplate = restTemplate;
-        this.redisTemplate = redisTemplate;
+//        this.redisTemplate = redisTemplate;
     }
 
     public Product getProductFromResponseDTO(ResponseDTO responseDTO){
@@ -53,10 +53,10 @@ public class FakeStoreProductService implements IProductService{
     public Product getSingleProduct(Long id) throws ProductNotFoundException{
 
         // I want to run an operation on hash value
-        Product p = (Product) redisTemplate.opsForHash().get("PRODUCTS", "PRODUCT_" + id);
-        if(p != null){
-            return p;
-        }
+//        Product p = (Product) redisTemplate.opsForHash().get("PRODUCTS", "PRODUCT_" + id);
+//        if(p != null){
+//            return p;
+//        }
 
         ResponseDTO responseDTO = restTemplate.getForObject(
                 "https://fakestoreapi.com/products/" + id,
@@ -69,7 +69,7 @@ public class FakeStoreProductService implements IProductService{
 
         Product product = getProductFromResponseDTO(responseDTO);
 
-        redisTemplate.opsForHash().put("PRODUCTS", "PRODUCT_"+id, product);
+//        redisTemplate.opsForHash().put("PRODUCTS", "PRODUCT_"+id, product);
 
         return product;
     }
