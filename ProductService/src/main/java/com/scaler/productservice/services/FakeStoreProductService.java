@@ -1,9 +1,6 @@
 package com.scaler.productservice.services;
 
-import com.scaler.productservice.dto.ErrorResponseDTO;
-import com.scaler.productservice.dto.FakeStoreRequestDTO;
-import com.scaler.productservice.dto.RequestDTO;
-import com.scaler.productservice.dto.ResponseDTO;
+import com.scaler.productservice.dto.*;
 import com.scaler.productservice.exceptions.ProductNotFoundException;
 import com.scaler.productservice.models.Category;
 import com.scaler.productservice.models.Product;
@@ -49,29 +46,34 @@ public class FakeStoreProductService implements IProductService{
         return product;
     }
 
-    @Override
-    public Product getSingleProduct(Long id) throws ProductNotFoundException{
-
-        // I want to run an operation on hash value
-//        Product p = (Product) redisTemplate.opsForHash().get("PRODUCTS", "PRODUCT_" + id);
-//        if(p != null){
-//            return p;
+//    @Override
+//    public Product getSingleProduct(Long id) throws ProductNotFoundException{
+//
+//        // I want to run an operation on hash value
+////        Product p = (Product) redisTemplate.opsForHash().get("PRODUCTS", "PRODUCT_" + id);
+////        if(p != null){
+////            return p;
+////        }
+//
+//        ResponseDTO responseDTO = restTemplate.getForObject(
+//                "https://fakestoreapi.com/products/" + id,
+//                ResponseDTO.class
+//        );
+//
+//        if(responseDTO == null){
+//            throw new ProductNotFoundException("product with id " + id + " does not exists");
 //        }
+//
+//        Product product = getProductFromResponseDTO(responseDTO);
+//
+////        redisTemplate.opsForHash().put("PRODUCTS", "PRODUCT_"+id, product);
+//
+//        return product;
+//    }
 
-        ResponseDTO responseDTO = restTemplate.getForObject(
-                "https://fakestoreapi.com/products/" + id,
-                ResponseDTO.class
-        );
-
-        if(responseDTO == null){
-            throw new ProductNotFoundException("product with id " + id + " does not exists");
-        }
-
-        Product product = getProductFromResponseDTO(responseDTO);
-
-//        redisTemplate.opsForHash().put("PRODUCTS", "PRODUCT_"+id, product);
-
-        return product;
+    @Override
+    public ProductAndUser getSingleProduct(Long id) throws ProductNotFoundException {
+        return null;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.scaler.productservice.services;
 
+import com.scaler.productservice.dto.ProductAndUser;
 import com.scaler.productservice.dto.RequestDTO;
 import com.scaler.productservice.exceptions.ProductNotFoundException;
 import com.scaler.productservice.models.Product;
@@ -7,7 +8,7 @@ import com.scaler.productservice.models.Product;
 import java.util.List;
 
 public interface IProductService {
-    public Product getSingleProduct(Long id) throws ProductNotFoundException;
+    public ProductAndUser getSingleProduct(Long id) throws ProductNotFoundException;
     public List<Product> getAllProducts();
     public Product addProduct(Product product);
     public Product updateProduct(Long id, Product product) throws ProductNotFoundException;

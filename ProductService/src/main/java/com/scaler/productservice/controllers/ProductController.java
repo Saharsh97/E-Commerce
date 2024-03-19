@@ -2,6 +2,7 @@ package com.scaler.productservice.controllers;
 
 import com.scaler.productservice.commons.AuthenticationCommons;
 import com.scaler.productservice.dto.ErrorResponseDTO;
+import com.scaler.productservice.dto.ProductAndUser;
 import com.scaler.productservice.dto.RequestDTO;
 import com.scaler.productservice.exceptions.ProductNotFoundException;
 import com.scaler.productservice.models.Category;
@@ -30,7 +31,7 @@ public class ProductController {
 
 
     @Autowired
-    public ProductController(@Qualifier("fakeStoreProductService") IProductService productService, AuthenticationCommons authenticationCommons){
+    public ProductController(@Qualifier("selfProductService") IProductService productService, AuthenticationCommons authenticationCommons){
         this.productService = productService;
         this.authenticationCommons = authenticationCommons;
     }
@@ -58,11 +59,11 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getSingleProduct(@PathVariable("id") Long id) throws ProductNotFoundException {
-        ResponseEntity<Product> responseEntity;
-        Product product = productService.getSingleProduct(id);
+    public ResponseEntity<ProductAndUser> getSingleProduct(@PathVariable("id") Long id) throws ProductNotFoundException {
+        ResponseEntity<ProductAndUser> responseEntity;
+        ProductAndUser productAndUser = productService.getSingleProduct(id);
         responseEntity = new ResponseEntity<>(
-                product,
+                productAndUser,
                 HttpStatus.OK
         );
         return responseEntity;
