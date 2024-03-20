@@ -60,6 +60,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductAndUser> getSingleProduct(@PathVariable("id") Long id) throws ProductNotFoundException {
+        System.out.println("got request in ProductController");
         ResponseEntity<ProductAndUser> responseEntity;
         ProductAndUser productAndUser = productService.getSingleProduct(id);
         responseEntity = new ResponseEntity<>(
