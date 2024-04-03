@@ -8,7 +8,7 @@ import com.scaler.productservice.models.Product;
 import java.util.List;
 
 public interface IProductService {
-    public ProductAndUser getSingleProduct(Long id) throws ProductNotFoundException;
+    public ProductAndUser getSingleProduct(Long id) throws Exception;
     public List<Product> getAllProducts();
     public Product addProduct(Product product);
     public Product updateProduct(Long id, Product product) throws ProductNotFoundException;

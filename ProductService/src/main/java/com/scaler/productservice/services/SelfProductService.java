@@ -7,6 +7,7 @@ import com.scaler.productservice.models.Category;
 import com.scaler.productservice.models.Product;
 import com.scaler.productservice.models.UserDTO;
 import com.scaler.productservice.repositories.CategoryRepository;
+import com.scaler.productservice.repositories.OpenSearchRepository;
 import com.scaler.productservice.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,33 +28,41 @@ public class SelfProductService implements IProductService{
     ProductRepository productRepository;
     CategoryRepository categoryRepository;
     RestTemplate restTemplate;
+    OpenSearchRepository openSearchRepository;
 
     @Autowired
-    public SelfProductService(ProductRepository productRepository, CategoryRepository categoryRepository, RestTemplate restTemplate){
+    public SelfProductService(ProductRepository productRepository, CategoryRepository categoryRepository, RestTemplate restTemplate, OpenSearchRepository openSearchRepository){
+        this.openSearchRepository = openSearchRepository;
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.restTemplate = restTemplate;
     }
 
     @Override
-    public ProductAndUser getSingleProduct(Long id) throws ProductNotFoundException {
-        Optional<Product> productOptional = productRepository.findById(id);
+    public ProductAndUser getSingleProduct(Long id) throws Exception {
+//        Optional<Product> productOptional = productRepository.findById(id);
+//        if(productOptional.isEmpty()){
+//            throw new ProductNotFoundException("product with id " + id + " does not exists");
+//        }
+//        Product product = productOptional.get();
+//
+//        ResponseEntity<UserDTO> response = restTemplate.getForEntity(
+//                "http://RaviUserService/users/1",
+//                UserDTO.class
+//        );
+//        UserDTO userDTO = response.getBody();
+//
+//
+//        ProductAndUser productAndUser = new ProductAndUser();
+//        productAndUser.setProduct(product);
+//        productAndUser.setUserDTO(userDTO);
+//
+        Optional<Product> productOptional = openSearchRepository.findById(id);
         if(productOptional.isEmpty()){
-            throw new ProductNotFoundException("product with id " + id + " does not exists");
+            throw new Exception();
         }
         Product product = productOptional.get();
-
-        ResponseEntity<UserDTO> response = restTemplate.getForEntity(
-                "http://RaviUserService/users/1",
-                UserDTO.class
-        );
-        UserDTO userDTO = response.getBody();
-
-
-        ProductAndUser productAndUser = new ProductAndUser();
-        productAndUser.setProduct(product);
-        productAndUser.setUserDTO(userDTO);
-        return productAndUser;
+        return product;
     }
 
     @Override
@@ -72,6 +81,8 @@ public class SelfProductService implements IProductService{
             product.setCategory(categoryOptional.get());
         }
         Product savedProduct = productRepository.save(product);
+
+        openSearchRepository.save(product);
         return savedProduct;
     }
 
